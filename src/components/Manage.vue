@@ -56,7 +56,7 @@ export default {
         {name:'鱼头汤',key:'002'},
         {name:'叉烧',key:'003'},
         {name:'面包',key:'004'},
-        {name:'油炸茄子',key:'005'},
+        {name:'油炸茄子',key:'005' },
       ]
     };
   },
