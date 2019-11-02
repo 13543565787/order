@@ -8,7 +8,11 @@
       </h2>
     </nav>
     <div class="wrapper">
-      <div class="slider">
+      <div 
+      class="slider" 
+      @mouseleave="handleLeave"
+      @mouseenter="handleEnter"
+      >
         <button class="leftBtn" @click="leftClick">
           <i class="iconfont">&#xe604;</i>
         </button>
@@ -17,12 +21,12 @@
         </button>
         <div class="pointer">
           <ul>
-            <li v-for="item in len" :key="item">
-              <div></div>
+            <li v-for="(item,index) in len" :key="item">
+              <div :class="{selected : (cur_index === index)}" @mouseenter="pointEnter(index)"></div>
             </li>
           </ul>
         </div>
-        <ul class="slideList" :style="{ left : this.left+'px' }">
+        <ul class="slideList" :style="{ left : (-cur_index * 500)+'px' }">
           <!-- <ul class="slideList" > -->
           <!-- :style="{left:index*500 +'px'}" -->
           <li v-for="(img,index) in this.imgs" :key="index">
@@ -41,6 +45,7 @@
 </template>
 
 <script>
+import { clearInterval } from 'timers';
 export default {
   data() {
     return {
@@ -52,8 +57,9 @@ export default {
         { src: require("../assets/images/img5.jpg") }
       ],
       imgPosition: [0, 120],
-      left: 0 //作为切换轮播图的方式
-      // src: require("../assets/images/img1.jpg")
+      // left: 0, //作为切换轮播图的方式
+      cur_index : 0,//代表当前所在的图片页面
+      timer : null,//用来设置计数器的
     };
   },
   computed: {
@@ -70,18 +76,44 @@ export default {
       this.$router.push("/login");
     },
     leftClick() {
-      if (this.left >= 0) {
+      if (this.cur_index <= 0) {
+        this.cur_index = this.len-1;
         return;
       }
-      this.left += 500;
+      this.cur_index -= 1;
     },
     rightClick() {
-      if (this.left <= -(this.len-1) * 500) {
+      if (this.cur_index >= (this.len-1)) {
+        this.cur_index = 0;
         return;
       }
-      this.left -= 500;
-    }
-  }
+      this.cur_index += 1;
+    },
+    pointEnter(index){
+      this.cur_index = index;
+    },
+    //自动轮播
+    autoSlide(){
+      let timer = setInterval(()=>{
+        this.cur_index +=1;
+        if(this.cur_index ==this.len){
+          this.cur_index = 0;
+        }
+      },1000);
+      return timer;
+    },
+    handleEnter(){
+      window.clearInterval(this.timer);
+    },
+    handleLeave(){
+      this.timer = this.autoSlide();
+    },
+    
+  },
+  mounted(){
+    this.cur_index = 0;
+    this.timer = this.autoSlide();
+  },
 };
 </script>
 
@@ -213,6 +245,9 @@ nav h2 span {
   height: 12px;
   border-radius: 50%;
   background-color: #ccc;
+}
+.wrapper .slider .pointer ul li div.selected {
+  background-color: #000;
 }
 .wrapper .slider .pointer ul li div:hover {
   background-color: #000;
