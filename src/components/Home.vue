@@ -22,9 +22,10 @@
             </li>
           </ul>
         </div>
-        <ul class="slideList">
+        <ul class="slideList" :style="{ left : this.left+'px' }">
+          <!-- <ul class="slideList" > -->
           <!-- :style="{left:index*500 +'px'}" -->
-          <li v-for="(img,index) in this.imgs" :key="index" >
+          <li v-for="(img,index) in this.imgs" :key="index">
             <a href="#">
               <div class="img">
                 <img :src="img.src" alt="图片加载失败" />
@@ -50,7 +51,8 @@ export default {
         { src: require("../assets/images/img4.jpg") },
         { src: require("../assets/images/img5.jpg") }
       ],
-      imgPosition: [0, 120]
+      imgPosition: [0, 120],
+      left: 0 //作为切换轮播图的方式
       // src: require("../assets/images/img1.jpg")
     };
   },
@@ -67,8 +69,17 @@ export default {
     goTo() {
       this.$router.push("/login");
     },
-    leftClick(){
-
+    leftClick() {
+      if (this.left >= 0) {
+        return;
+      }
+      this.left += 500;
+    },
+    rightClick() {
+      if (this.left <= -(this.len-1) * 500) {
+        return;
+      }
+      this.left -= 500;
     }
   }
 };
@@ -113,15 +124,20 @@ nav h2 span {
   overflow: hidden;
   position: relative;
 }
+/* 思路是，整个ul是一个整体且是一个定位元素，通过left来改变
+而ul中的li都是浮动的！ */
 .wrapper .slider ul.slideList {
-  /* position: relative; */
+  position: relative;
   width: 5000px;
+  left: 0px;
+  /* 改变left达到滚动效果！！！！ */
   /* height: 500px; */
 }
 .wrapper .slider ul.slideList li {
   /* border: 2px solid #000; */
-  position: absolute;
-  z-index: 1;
+  /* position: absolute; */
+  /* z-index: 1; */
+  float: left;
 }
 .wrapper .slider ul.slideList li .img {
   width: 500px;
