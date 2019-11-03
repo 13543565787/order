@@ -44,7 +44,7 @@
 export default {
   data() {
     return {
-      newDish :{
+      newDish :{//存放从页面中提交的数据
         name:'',
         classify:'',
         price:'',
@@ -62,8 +62,16 @@ export default {
   },
   methods:{
     addDish(){
-
+      const {name,classify,price,img} = this.newDish;
+      if(name === ''||classify ===''||price === ''|| img === ''){
+        alert("请输入完整");
+        return;
+      }
+      console.log(this.newDish);
     }
+  },
+  created(){
+    //在页面的实例被创建时触发，可用于数据请求。
   }
 };
 </script>
