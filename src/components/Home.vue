@@ -64,7 +64,6 @@ export default {
   },
   computed: {
     len() {
-      console.log(this.imgs.length);
       return this.imgs.length;
     }
   },
